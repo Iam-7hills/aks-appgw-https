@@ -1,6 +1,8 @@
 STEP 1
 Create Certs - just execute the powershell
 
+Open powershell ---> .\certs_file.ps1
+
 STEP 2 - IN AKS Cluster
 1. Create secrets
    	kubectl create secret tls iam7hills-tls --cert=tls.crt --key=tls.key -n default
