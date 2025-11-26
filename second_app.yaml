@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: second-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: second-app
+  template:
+    metadata:
+      labels:
+        app: second-app
+    spec:
+      containers:
+      - name: second-app
+        image: iam7hills/dockerdemo:second_app
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: second-app-svc
+spec:
+  type: ClusterIP
+  selector:
+    app: second-app
+  ports:
+    - port: 80
+      targetPort: 80

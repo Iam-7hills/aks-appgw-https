@@ -1,0 +1,51 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: apps-ingress
+  namespace: default
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"  # force HTTPS
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - www.iam7hills.com
+      secretName: iam7hills-tls  # Kubernetes TLS secret containing tls.crt + tls.key
+  rules:
+    - host: www.iam7hills.com
+      http:
+        paths:
+          - path: /first_app(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: first-app-svc
+                port:
+                  number: 80
+
+          - path: /second_app(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: second-app-svc
+                port:
+                  number: 80
+
+          - path: /third_app(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: third-app-svc
+                port:
+                  number: 80
+
+          # Dedicated path for App Gateway health probe
+          - path: /healthz
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: first-app-svc
+                port:
+                  number: 80

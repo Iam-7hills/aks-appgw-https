@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: third-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: third-app
+  template:
+    metadata:
+      labels:
+        app: third-app
+    spec:
+      containers:
+      - name: third-app
+        image: iam7hills/dockerdemo:third_app
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: third-app-svc
+spec:
+  type: ClusterIP
+  selector:
+    app: third-app
+  ports:
+    - port: 80
+      targetPort: 80
