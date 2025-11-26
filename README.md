@@ -1,0 +1,58 @@
+STEP 1
+Create Certs
+
+STEP 2
+1. Run Nginx_controller - No changes to existing yaml
+2. Deploy the app and services - No changes to existing yaml
+3. Deploy the ingress yaml - Yes minimal changes
+
+STEP 3
+Create App Gateway
+	Backend Pool 
+	Routing rule/Listener
+	Backend settings --- Upload CRT and CER file
+	
+STEP 4
+Test the application
+
+Diagram
+           ┌───────────────┐
+           │   Browser /   │
+           │  Client App   │
+           └───────┬───────┘
+                   │ HTTPS (443)
+                   ▼
+           ┌───────────────┐
+           │ Application   │
+           │   Gateway     │
+           │ (Public IP)   │
+           ├───────────────┤
+           │ Listener:     │
+           │ HTTPS 443     │
+           │ PFX cert      │
+           ├───────────────┤
+           │ Backend Pool  │
+           │ Target: AKS   │
+           │ Internal LB   │
+           ├───────────────┤
+           │ HTTP Settings │
+           │ Backend TLS   │
+           │ RootCA .cer   │
+           └───────┬───────┘
+                   │ HTTPS (re-encrypt)
+                   ▼
+           ┌───────────────┐
+           │ AKS Cluster   │
+           │ NGINX Ingress │
+           │ (Internal LB) │
+           │ TLS secret    │
+           │ tls.crt + key │
+           └───────┬───────┘
+                   │ HTTP/HTTPS routing
+                   ▼
+        ┌──────────────────────┐
+        │   Kubernetes Pods    │
+        │ first-app / second-app│
+        │ third-app            │
+        └──────────────────────┘
+
