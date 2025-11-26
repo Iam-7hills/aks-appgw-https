@@ -1,5 +1,5 @@
 STEP 1
-Create Certs
+Create Certs - just execute the powershell
 
 STEP 2 - IN AKS Cluster
 1. Create secrets
